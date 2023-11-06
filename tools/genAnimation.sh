@@ -5,7 +5,7 @@ cd $(dirname $0)/..
 mkdir -p tmp
 rm -f tmp/*.png
 
-openscad -o tmp/wpp.png \
+openscad -o tmp/wbp.png \
 	 --camera 610,-400,0,10,30,0,3500 \
 	 --projection p \
 	 --imgsize 800,800 \

@@ -30,10 +30,10 @@
 //#      - Initial release                                                      #
 //#                                                                             #
 //###############################################################################
-//! ![WindoWBPainter](img/WBP.gif?raw=true)
+//! ![WBPainter](img/wbp.gif?raw=true)
 //! 
 //! WindoWBPainter is a project to recycle old 3D printers.
-//! It's a vertical plotter, to be be mounted on a window frame.
+//! It's a vertical plotter, to be mounted on a whiteboard.
 //! 
 //! This project is still work in progress. Here is my todo list:
 //! 
@@ -41,7 +41,7 @@
 //! |:---|:---|
 //! | &#9989; | Setup the project |
 //! | &#9989; | Start the design |
-//! | &#10060; | Run the NopSCADlib flow |
+//! | &#9989; | Run the NopSCADlib flow |
 //! | &#10060; | Complete an initial version of the design |
 //! | &#10060; | Add assembly descriptions |
 //! | &#10060; | Simplify the BOM |
@@ -49,7 +49,7 @@
 //! | &#10060; | Build a prototype |
 //! | &#10060; | Refine the design |
 //! | &#10060; | Setup a project web site |
-//! | &#10060; | Render an animated title picture |
+//! | &#9989; | Render an animated title picture |
 //! | &#10060; | Configure/customize the Marlin firmware |
 //! | &#10060; | Plot the first image |
 

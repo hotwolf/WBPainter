@@ -31,7 +31,7 @@
 //#                                                                             #
 //###############################################################################
 
-include <NopSCADlib/lib.scad>
+include <../lib/NopSCADlib/lib.scad>
 
 
 module hingeMale(l=22,a=0) {

@@ -31,7 +31,7 @@
 //#                                                                             #
 //###############################################################################
 
-include <NopSCADlib/lib.scad>
+include <../lib/NopSCADlib/lib.scad>
 
 module beadedChainPulley(bcBeadD = 3.2, //Bead diameter (+tolerance)
                          bcBeadS = 4,   //Bead spacing (distance between center of beads)

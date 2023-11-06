@@ -31,7 +31,7 @@
 //#                                                                             #
 //###############################################################################
 
-include <NopSCADlib/lib.scad>
+include <../lib/NopSCADlib/lib.scad>
 
 //Bead cut out
 module bcCutout(bcBeadD    = 3.2,   //Bead diameter (+tolerance)

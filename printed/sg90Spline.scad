@@ -31,7 +31,7 @@
 //#                                                                             #
 //###############################################################################
 
-include <NopSCADlib/lib.scad>
+include <../lib/NopSCADlib/lib.scad>
 
 //Cut out shape
 module sg90SplineCutout() {

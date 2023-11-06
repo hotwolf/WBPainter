@@ -47,7 +47,6 @@ use <../printed/cylinderBearing.scad>
 use <../printed/beadedChainIdler.scad>
 use <../printed/beadedChainPulley.scad>
 use <../printed/beadedChainMount.scad>
-use <../printed/clampScrew.scad>
 use <../printed/penClamp.scad>
 use <../printed/sg90Spline.scad>
 

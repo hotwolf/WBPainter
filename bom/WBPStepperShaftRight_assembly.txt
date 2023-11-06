@@ -1,0 +1,6 @@
+WBPStepperShaftRight_assembly:
+
+Assemblies:
+  1 WBPAlignerRight_assembly
+  1 WBPPulley_assembly
+  1 WBPStepperMounRight_assembly
