@@ -1,5 +1,5 @@
 //###############################################################################
-//# WBPainter - Pen                                                             #
+//# WBPainter - Beaded Chain Pulley                                             #
 //###############################################################################
 //#    Copyright 2023 Dirk Heisswolf                                            #
 //#    This file is part of the WBPainter project.                              #
@@ -22,7 +22,7 @@
 //#                                                                             #
 //###############################################################################
 //# Description:                                                                #
-//#   Model of a pen                                                            #
+//#   Fixture to align the beaded chain to the center of the stepper shaft      #
 //#                                                                             #
 //###############################################################################
 //# Version History:                                                            #
@@ -31,35 +31,57 @@
 //#                                                                             #
 //###############################################################################
 
-include <../lib/NopSCADlib/lib.scad>
+include <WBPConfig.scad>
 
-module pen(r=undef,d=12) {
-  vitamin("pen(): Window pen");
-  r = r==undef ? d/2 : r;
-    
-  //Tip
-  color("SeaGreen") rotate_extrude()
-  intersection() {
-    square([1.5,4]);
-    hull() {
-      translate([0,0.5,0]) circle(d=1.5);
-      translate([0,4,0])   circle(d=3);
+use <../printed/beadedChainPulley.scad>
+
+//Set view
+$vpt = [8,10,20];
+$vpr = [72,0,75];
+
+//Pulley for beaded chain
+module WBPPulley_stl() {
+  stl("WBPPulley");
+
+  color(pp2_colour)
+  difference() {
+    union() {
+      beadedChainPulley(bcBeadD = bcBeadD, //Bead diameter (+tolerance)
+                        bcBeadS = bcBeadS, //Bead spacing (distance between center of beads)
+                        bcCordD = bcCordD, //Cord diameter
+                        boreD   = 2,       //Bore diameter
+                        guideN  = 32,      //Number of beads on the chain guide
+                        outerD  = 45,      //Outter diameter
+                        guideW  = 6,       //Width of the chain guide 
+                        outerW  = 8);      //Outer width
+
+      translate([0,0,4]) cylinder(h=6,d=16);
     }
-  }
-  //Tip holder
-  color("MediumSeaGreen") rotate_extrude()
-  union() {
-    translate([0,4,0]) square([2.5,6]);
-    hull() {
-      translate([0,10,0]) square([2.5,6]);
-      translate([0,19,0]) square([r-2,9]);
+    union() {
+      transrot([0,0,7],[90,0,0]) cylinder(h=10,r=screw_clearance_radius(M3_pan_screw));
+      transrot([-0.1-nut_square_width(M3nS_thin_nut)/2,-4.1-nut_square_thickness(M3nS_thin_nut),6.9-nut_square_width(M3nS_thin_nut)/2],[0,0,0]) 
+        cube([nut_square_width(M3nS_thin_nut)+0.2,nut_square_thickness(M3nS_thin_nut)+0.2,10]);
+      difference() {
+        translate([0,0,3]) cylinder(d=5,h=20,center=true);
+        translate([0,-3,3]) cube([8,2,20],center=true);
+      }
     }
-  }
-  //Body
-  color("WhiteSmoke") rotate_extrude()
-  translate([0,28,0]) square([r,100]);
+  } 
 }
 
-if ($preview) {
-  pen();
+//! TBD
+module WBPPulley_assembly() {
+  pose([8, 10, 20], [72,0,75])
+  assembly("WBPPulley") {
+
+    WBPPulley_stl();
+    transrot([0,-4,7],[90,0,0])  explode([0,15,0]) nut_square(M3nS_thin_nut);
+    transrot([0,-10,7],[90,0,0]) explode([0,0,15])screw(M3_pan_screw,8);
+    
+  }
+}
+
+if($preview) {   
+   $explode = 1;
+   WBPPulley_assembly();
 }

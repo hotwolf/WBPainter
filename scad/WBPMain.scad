@@ -1,5 +1,5 @@
 //###############################################################################
-//# WBPainter - Pen                                                             #
+//# WBPainter - Main Assembly                                                   #
 //###############################################################################
 //#    Copyright 2023 Dirk Heisswolf                                            #
 //#    This file is part of the WBPainter project.                              #
@@ -22,7 +22,7 @@
 //#                                                                             #
 //###############################################################################
 //# Description:                                                                #
-//#   Model of a pen                                                            #
+//#   Main assembly of the WBPainter.                                           #
 //#                                                                             #
 //###############################################################################
 //# Version History:                                                            #
@@ -30,36 +30,85 @@
 //#      - Initial release                                                      #
 //#                                                                             #
 //###############################################################################
+//! ![WindoWBPainter](img/WBP.gif?raw=true)
+//! 
+//! WindoWBPainter is a project to recycle old 3D printers.
+//! It's a vertical plotter, to be be mounted on a window frame.
+//! 
+//! This project is still work in progress. Here is my todo list:
+//! 
+//! | Status | Task  |
+//! |:---|:---|
+//! | &#9989; | Setup the project |
+//! | &#9989; | Start the design |
+//! | &#10060; | Run the NopSCADlib flow |
+//! | &#10060; | Complete an initial version of the design |
+//! | &#10060; | Add assembly descriptions |
+//! | &#10060; | Simplify the BOM |
+//! | &#10060; | Finalize the build instructions |
+//! | &#10060; | Build a prototype |
+//! | &#10060; | Refine the design |
+//! | &#10060; | Setup a project web site |
+//! | &#10060; | Render an animated title picture |
+//! | &#10060; | Configure/customize the Marlin firmware |
+//! | &#10060; | Plot the first image |
 
-include <../lib/NopSCADlib/lib.scad>
+include <./WBPConfig.scad>
 
-module pen(r=undef,d=12) {
-  vitamin("pen(): Window pen");
-  r = r==undef ? d/2 : r;
-    
-  //Tip
-  color("SeaGreen") rotate_extrude()
-  intersection() {
-    square([1.5,4]);
-    hull() {
-      translate([0,0.5,0]) circle(d=1.5);
-      translate([0,4,0])   circle(d=3);
+use <./WBPStepper.scad>
+use <./WBPGondola.scad>
+use <./WBPWeight.scad>
+use <./WBPController.scad>
+use <./WBPBeadedChain.scad>
+
+//Set view
+//$vpt = [500,-400,-1.5];
+//$vpr = [10,30,0];
+//$vpd = 3500;
+
+//! A vertical plotter  . 
+// ![inside](doc/DIYLB.gif?raw=true)
+
+//! Finished!
+module main_assembly() {
+  //pose([30, 0, 0], [150,150,0])
+    assembly("main") {
+
+      //Left stepper
+      WBPStepperLeft_assembly();
+
+      //Right stepper
+      WBPStepperRight_assembly();
+
+      //Gondola
+      translate([gondolaX,gondolaY,0]) WBPGondola_assembly();
+
+      //Left weight
+      translate([-weightOffsX,-weightLeftY,0]) WBPWeight_assembly();
+        
+      //Right weight
+      translate([canvasW+weightOffsX,-weightRightY,0]) WBPWeight_assembly();
+
+      //Controller
+      translate([canvasW/2,0,0]) WBPController_assembly();
+
+      //Beaded chains
+      WBPBeadedChainLeft();
+      WBPBeadedChainRight();
+
+      //Whiteboard
+      whiteboard(xOffset=0,
+                 yOffset=0,
+                 zOffset=-12,
+                 canvasHeight=canvasH,
+                 canvasWidth=canvasW,
+                 drawingXF=drawingXF,
+                 drawingYF=drawingYF);
+
     }
-  }
-  //Tip holder
-  color("MediumSeaGreen") rotate_extrude()
-  union() {
-    translate([0,4,0]) square([2.5,6]);
-    hull() {
-      translate([0,10,0]) square([2.5,6]);
-      translate([0,19,0]) square([r-2,9]);
-    }
-  }
-  //Body
-  color("WhiteSmoke") rotate_extrude()
-  translate([0,28,0]) square([r,100]);
 }
 
-if ($preview) {
-  pen();
+if($preview) {
+    
+  main_assembly();
 }

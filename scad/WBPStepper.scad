@@ -1,5 +1,5 @@
 //###############################################################################
-//# WBPainter - Pen                                                             #
+//# WBPainter - Stepper Motor Assembly                                          #
 //###############################################################################
 //#    Copyright 2023 Dirk Heisswolf                                            #
 //#    This file is part of the WBPainter project.                              #
@@ -22,7 +22,7 @@
 //#                                                                             #
 //###############################################################################
 //# Description:                                                                #
-//#   Model of a pen                                                            #
+//#   Stepper motor clamp assembly of the WindoWBPainter.                        #
 //#                                                                             #
 //###############################################################################
 //# Version History:                                                            #
@@ -31,35 +31,56 @@
 //#                                                                             #
 //###############################################################################
 
-include <../lib/NopSCADlib/lib.scad>
+include <./WBPConfig.scad>
 
-module pen(r=undef,d=12) {
-  vitamin("pen(): Window pen");
-  r = r==undef ? d/2 : r;
-    
-  //Tip
-  color("SeaGreen") rotate_extrude()
-  intersection() {
-    square([1.5,4]);
-    hull() {
-      translate([0,0.5,0]) circle(d=1.5);
-      translate([0,4,0])   circle(d=3);
-    }
+use <./WBPStepperMount.scad>
+use <./WBPStepperShaft.scad>
+use <./WBPStepperEndstop.scad>
+
+//Set view
+//$vpt = [25,30,20];
+//$vpr = [80,0,340];
+
+
+//! TBD
+module WBPStepperRight_assembly() {
+  pose([25,30,20], [80,0,240])
+  assembly("WBPStepperClampRight") {
+    translate([canvasW,0,0]) {
+   
+      //Stepper
+      explode([0,0,20]) transrot([stepperOffsX,stepperOffsY,0],[180,0,270]) WBPStepperShaftRight_assembly();
+      transrot([stepperOffsX,stepperOffsY,0],[180,0,180]) WBPStepperMountScrews();
+     
+      //EndStop  
+      translate([weightOffsX,-weightOffsY,0]) WBPStepperEndstopRight_assembly();
+      translate([weightOffsX,-weightOffsY,0]) WBPStepperEndstopScrewsRight();
+    }   
   }
-  //Tip holder
-  color("MediumSeaGreen") rotate_extrude()
-  union() {
-    translate([0,4,0]) square([2.5,6]);
-    hull() {
-      translate([0,10,0]) square([2.5,6]);
-      translate([0,19,0]) square([r-2,9]);
-    }
-  }
-  //Body
-  color("WhiteSmoke") rotate_extrude()
-  translate([0,28,0]) square([r,100]);
 }
 
-if ($preview) {
-  pen();
+//! TBD
+module WBPStepperLeft_assembly() {
+  pose([25,30,20], [80,0,180])
+  assembly("WBPStepperClampLeft") {
+    translate([0,0,0]) {
+      
+      //Stepper
+      explode([0,0,20]) transrot([-stepperOffsX,stepperOffsY,0],[180,0,270]) WBPStepperShaftLeft_assembly();
+      transrot([-stepperOffsX,stepperOffsY,0],[180,0,270]) WBPStepperMountScrews();
+      
+      //EndStop  
+      translate([-weightOffsX,-weightOffsY,0]) WBPStepperEndstopLeft_assembly();
+      translate([-weightOffsX,-weightOffsY,0]) WBPStepperEndstopScrewsLeft();
+   }   
+  }
+}
+
+if($preview) {
+   $explode = 0;
+   WBPStepperRight_assembly();
+   *WBPStepperLeft_assembly();
+   
+   *translate([0,0,-44]) windowFrame(glassHeight=canvasH,
+                                    glassWidth=canvasW); 
 }

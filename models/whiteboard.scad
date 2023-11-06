@@ -43,7 +43,7 @@ module whiteboard(xOffset=0,
 
   //Constants
   depth=10;
-  margin=85; 
+  margin=120; 
                        
   translate([xOffset,yOffset,zOffset]) {
 

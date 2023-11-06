@@ -1,5 +1,5 @@
 //###############################################################################
-//# WBPainter - Pen                                                             #
+//# WBPainter - Gondola Assembly                                                #
 //###############################################################################
 //#    Copyright 2023 Dirk Heisswolf                                            #
 //#    This file is part of the WBPainter project.                              #
@@ -22,7 +22,7 @@
 //#                                                                             #
 //###############################################################################
 //# Description:                                                                #
-//#   Model of a pen                                                            #
+//#   The pen clamp                                                             #
 //#                                                                             #
 //###############################################################################
 //# Version History:                                                            #
@@ -31,35 +31,37 @@
 //#                                                                             #
 //###############################################################################
 
-include <../lib/NopSCADlib/lib.scad>
+include <./WBPConfig.scad>
 
-module pen(r=undef,d=12) {
-  vitamin("pen(): Window pen");
-  r = r==undef ? d/2 : r;
+use <../scad/WBPGondolaBearings.scad>
+use <../scad/WBPGondolaLifter.scad>
+
+//Set view
+//$vpt = [1,0,5];
+//$vpr = [0,250,320];
+
+//! TBD
+module WBPGondola_assembly() {
+  pose([1,0,5], [0,250,320])
+  assembly("WBPGondola") {
+
+
+   translate([0,0,0])  WBPGondolaBearings_assembly();
+
+   translate([0,-42,0]) WBPGondolaLifter_assembly();
+      
+   translate([0,0,-44]) pen(r=undef,d=18);
+
+       
+  }  
+}
+
+
+if($preview) {
+//   $explode = 1;
     
-  //Tip
-  color("SeaGreen") rotate_extrude()
-  intersection() {
-    square([1.5,4]);
-    hull() {
-      translate([0,0.5,0]) circle(d=1.5);
-      translate([0,4,0])   circle(d=3);
-    }
-  }
-  //Tip holder
-  color("MediumSeaGreen") rotate_extrude()
-  union() {
-    translate([0,4,0]) square([2.5,6]);
-    hull() {
-      translate([0,10,0]) square([2.5,6]);
-      translate([0,19,0]) square([r-2,9]);
-    }
-  }
-  //Body
-  color("WhiteSmoke") rotate_extrude()
-  translate([0,28,0]) square([r,100]);
-}
-
-if ($preview) {
-  pen();
-}
+  WBPGondola_assembly();
+    
+//  translate([-canvasW/2,canvasH/2,-44]) windowFrame(glassHeight=canvasH,
+//                                              glassWidth=canvasW); 
+ }
