@@ -115,158 +115,85 @@ RRDSC    = ["RRDSC", "RapRapDiscount Smart Controller",
             M2p5_pan_screw
            ];
 
-module WBPControllerClamp () {
+//Magnet positions
+module WBPController_magnetPositions(z=0) {
+  for(i = [[-58, 69-45, z],
+           [ 58, 69-45, z],
+           [-60,-46, z],
+           [ 60,-46, z]])
+    translate(i) children();
+}
 
-  //Inside
-  difference() {
-    union() {
+//Controller mount
+module WBPControllerMount_stl() {
 
-      for(x=[-75,39]) {
-        translate([x,-22,-34]) cube([36,8,20]);
-     }
-      for(x=[-75,-47,39,67]) {
-        hull() {  
-          translate([x,-22,-14]) cube([8,15,4]);
-          translate([x,-22,-34]) cube([8,8,20]);
-        }    
-      }    
-    }  
-    union() {
-      for (x=[57,-57]) {
-//        transrot([x,-30,-24],[90,0,0]) hull()
-//          screwClampShoe(type=M5_hex_screw,length=20);
-        transrot([x,-10,-24],[90,0,0]) cylinder(h=20,r=screw_clearance_radius(M5_hex_screw)); 
-        hull() {
-          for (z=[-24,-44]) {
-            transrot([x,-15.9,z],[90,30,0]) 
-            cylinder(h=nut_trap_depth(M5_nut)+0.2,r=nut_radius(M5_nut)+0.2,$fn=6);
-          }
-        }
+   difference() {
+      union() {         
+         translate([0, 40,canvasZ]) pcb_screw_positions(GT2560)   cylinder(h=10, d=7);
+         translate([0, 40,canvasZ]) pcb_screw_positions(MEGA2560) cylinder(h=10, d=7);
+         translate([0,-28,canvasZ]) pcb_screw_positions(RRDSC)    cylinder(h=10, d=7);
+         hull() { 
+            translate([-52, 76,canvasZ]) cylinder(h=6, d=10);
+            translate([ 52, 76,canvasZ]) cylinder(h=6, d=10);
+            WBPController_magnetPositions(canvasZ) cylinder(h=6, d=24);
+            translate([0, 40,canvasZ]) pcb_screw_positions(GT2560)   cylinder(h=6, d=10);
+            translate([0, 40,canvasZ]) pcb_screw_positions(MEGA2560) cylinder(h=6, d=10);
+            translate([0,-28,canvasZ]) pcb_screw_positions(RRDSC)    cylinder(h=6, d=10);
+         }
       }
-    }
-  }
-  //Front
-  difference() {
-    union() {
-      translate([-75,-22,-14]) cube([150,112,4]);
-    }
-    union() {
-//       //Screw holes
-//       translate([-stepperOffsX-7-NEMA_hole_pitch(stepperT)/2,stepperOffsY-7-NEMA_hole_pitch(stepperT)/2,-20]) cylinder(r=screw_clearance_radius(M3_dome_screw),h=20);
-//       translate([-stepperOffsX-7-NEMA_hole_pitch(stepperT)/2,stepperOffsY-7-NEMA_hole_pitch(stepperT)/2,-21]) cylinder(d=screw_boss_diameter(M3_dome_screw),h=10);
-//
-//       translate([-stepperOffsX-7-NEMA_hole_pitch(stepperT)/2,stepperOffsY+7+NEMA_hole_pitch(stepperT)/2,-20]) cylinder(r=screw_clearance_radius(M3_dome_screw),h=20);
-//       translate([-stepperOffsX-7-NEMA_hole_pitch(stepperT)/2,stepperOffsY+7+NEMA_hole_pitch(stepperT)/2,-21]) cylinder(d=screw_boss_diameter(M3_dome_screw),h=10);
-//
-//       translate([-stepperOffsX+7+NEMA_hole_pitch(stepperT)/2,stepperOffsY+7+NEMA_hole_pitch(stepperT)/2,-20]) cylinder(r=screw_clearance_radius(M3_dome_screw),h=20);
-//       translate([-stepperOffsX+7+NEMA_hole_pitch(stepperT)/2,stepperOffsY+7+NEMA_hole_pitch(stepperT)/2,-21]) cylinder(d=screw_boss_diameter(M3_dome_screw),h=10);
-// 
-//       //Fittings
-//       translate([-stepperOffsX-9-NEMA_hole_pitch(stepperT)/2,stepperOffsY-1-NEMA_hole_pitch(stepperT)/2,-16]) cylinder(h=8,d1=1.7,d2=3.7); 
-//       translate([-stepperOffsX-9-NEMA_hole_pitch(stepperT)/2,stepperOffsY+1+NEMA_hole_pitch(stepperT)/2,-16]) cylinder(h=8,d1=1.7,d2=3.7); 
-//       translate([-stepperOffsX-1-NEMA_hole_pitch(stepperT)/2,stepperOffsY+9+NEMA_hole_pitch(stepperT)/2,-16]) cylinder(h=8,d1=1.7,d2=3.7); 
-//       translate([-stepperOffsX+1+NEMA_hole_pitch(stepperT)/2,stepperOffsY+9+NEMA_hole_pitch(stepperT)/2,-16]) cylinder(h=8,d1=1.7,d2=3.7); 
-
-        
-    }
-  }
-        
-  //Outside
-  translate([-75,85,-24]) cube([150,2,10]);
-  for (x=[-75:9.125:75]) { 
-    hull() {
-      translate([x,85,-14]) cube([4,5,4]);
-      translate([x,85,-24]) cube([4,2,10]);
-    }
-  }     
-}
-
-module WBPControllerClamp_stl() {
-  stl("WBPControllerClamp");
-  color(pp1_colour)
-  WBPControllerClamp();
-}
-
-//! TBD
-module WBPControllerClamp_assembly() {
-  pose([25,30,20], [80,0,240])
-  assembly("WBPControllerClamp") {
-    //Printed part
-    transrot([0,0,0],[0,0,0]) WBPControllerClamp_stl();
-      
-    //Clamp screws
-    for (x=[57,-57]) {
-      transrot([x,-22,-24],[90,0,0])WBPClampScrew_assembly();
-      #explode([0,0,-20]) transrot([x,-16,-24],[90,30,0]) nut(M5_nut);  
-    }
-  }
-}
-
-
-module WBPControllerDisplayMount_stl() {
-  stl("WBPControllerDisplayMount")
-
-//  translate([2.62-150/2,-55/2,0]) 
-  difference() {    
-    union() {
-      
-    }  
-    union() { 
-      for (y=[2.62,52.38]) {
-        #transrot([0,y,-2],[180,0,30]) cylinder(h=20,r=nut_radius(M3_nut),$fn=6);   
-        #transrot([0,y,10],[180,0,0]) cylinder(h=20,r=screw_radius(M3_dome_screw));   
+      union() {
+         WBPController_magnetPositions(canvasZ+0.2) magnetCavity();
+         translate([0, 40,-12]) pcb_screw_positions(GT2560)   nut_trap(M3_dome_screw, M3_nut, 5);
+         translate([0, 40,-12]) pcb_screw_positions(MEGA2560) nut_trap(M3_dome_screw, M3_nut, 5);
+         translate([0,-28,-12]) pcb_screw_positions(RRDSC)    nut_trap(M3_dome_screw, M3_nut, 5);
       }
-      #transrot([0,0,0],[0,0,0]) cube([10,10,10]);   
-  }
-      
-
-
-
- 
-      
-      
-//            150,              //Length
-//            55,               //Width
-//        
-//             [2.62,2.62], 
-//             [2.62,52.38],
-//             [147.38,2.62],
-//             [147.38,52.38]
-
-
+  }  
 }
- 
+
+
+//! Insert magnets during print
+module WBPControllerMount_assembly() {
+
+   //Controller mount
+   WBPControllerMount_stl();
+
+   //Magnets 
+   WBPController_magnetPositions(canvasZ+0.2){magnet();};
 }
-WBPControllerDisplayMount_stl();
-
-module WBPControllerDisplay_assembly() {
-  pose([25,30,20], [80,0,240])
-  assembly("WBPController") {
-
-      pcb(RRDSC);
-
-
-
-  }
-  } 
-
 
 //! TBD
 module WBPController_assembly() {
   pose([25,30,20], [80,0,240])
   assembly("WBPController") {
-    //Clamp
-//    WBPControllerClamp_assembly();
-  
+
+   //Controller mount
+   WBPControllerMount_assembly();
+
+   //Geeetech GT2560
+   transrot([0,40,-2],[0,0,0]) {
+      explode(3) pcb(GT2560);
+      pcb_screw_positions(GT2560) {        
+         translate([0,0,pcb_thickness(GT2560)]) screw_and_washer(M3_dome_screw,10);
+         explode(-10) translate([0,0,canvasZ+4]) nut(M3_nut);         
+      } 
+    }
+
+    //Arduino MEGA 2560 * RAMPS 1.4
+    transrot([0,40,-2],[0,0,0]) {
+      explode(3) pcb(MEGA2560);
+      pcb_screw_positions(MEGA2560) {        
+         translate([0,0,pcb_thickness(MEGA2560)]) screw_and_washer(M3_dome_screw,10);
+         explode(-10) translate([0,0,canvasZ+4]) nut(M3_nut);         
+     } 
+    }
+ 
     //RapRapDiscount Smart Controller
-    translate([0,-26,-14])
-    rotate([45,0,0]) 
-    translate([0,27.5,0]) {
-      pcb(RRDSC);
-      pcb_screw_positions(RRDSC) {
-         
-         translate([0,0,pcb_thickness(RRDSC)]) screw_and_washer(M3_dome_screw,20);
-          
+//    rotate([30,0,0])
+    translate([0,-28,-2]) {
+      explode(3) pcb(RRDSC);
+      pcb_screw_positions(RRDSC) {        
+         translate([0,0,pcb_thickness(RRDSC)]) screw_and_washer(M3_dome_screw,10);
+         explode(-10) translate([0,0,canvasZ+4]) nut(M3_nut);         
       } 
     }
         
@@ -274,11 +201,6 @@ module WBPController_assembly() {
 }
   
 if($preview) {
-//   $explode = 1;
-   *WBPController_assembly();
-    WBPControllerDisplay_assembly();
-    
-   *transrot([0,0,0],[0,0,0]) pcb(MEGA2560); 
-     *transrot([0,60,0],[0,0,0]) pcb(GT2560);
-     *transrot([0,-10,10],[45,0,0]) pcb(RRDSC);
+//  $explode = 1;
+    WBPController_assembly();
 }

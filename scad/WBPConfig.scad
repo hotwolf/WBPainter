@@ -42,6 +42,7 @@ include <../lib/NopSCADlib/utils/thread.scad>
 
 use <../vitamins/sg90.scad>
 use <../vitamins/pen.scad>
+use <../vitamins/magnet.scad>
 
 use <../printed/cylinderBearing.scad>
 use <../printed/beadedChainIdler.scad>
@@ -68,6 +69,8 @@ use <../models/whiteboard.scad>
 //Canvas size
 canvasW  = 1000; //Window width
 canvasH  =  800; //Window height
+canvasZ  =  -12; //Y offset of the canvas
+
 
 //Drawing
 drawingXF = function (t)  canvasW/2+0.4*canvasW*cos(360*t);
@@ -85,7 +88,7 @@ gondolaY = drawingYF($t); //Y coordinate of the gondola
 bcBeadD = 3.2;     //Bead diameter (+tolerance)
 bcBeadS = 4;       //Bead spacing (distance between center of beads)
 bcCordD = 1;       //Cord diameter
-bcBeadC = "Gray"; //Bead color
+bcBeadC = "Gray";  //Bead color
 
 //Steppers
 stepperT      = NEMA17_40; //type of stepper motor
