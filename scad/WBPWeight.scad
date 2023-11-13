@@ -33,12 +33,6 @@
 
 include <./WBPConfig.scad>
 
-use <./WBPBeadedChain.scad>
-
-use <../printed/cylinderBearing.scad>
-use <../printed/beadedChainIdler.scad>
-
-
 //Set view
 //$vpt = [-10,-60,15];
 //$vpr = [330,-30,0];
@@ -46,56 +40,61 @@ use <../printed/beadedChainIdler.scad>
 //Beaded chain parts
 //==================
 //Left start bead
-module WBPWeightLeftStartBead(offsX=-weightOffsX,
-                             offsY=-weightLeftY) {
-  bead(x=offsX-10,
-       y=offsY-16.5);                    
+module WBPWeightLeftStartBead(offsY=weightLeftY) {
+  bead(x=-weightOffsX,
+       y=offsY-16.5,
+       z=bcZ-20);                    
 }
-*WBPWeightLeftStartBead(0,0);
+*WBPWeightLeftStartBead();
 
 //Left end bead
-module WBPWeightLeftEndBead(offsX=-weightOffsX,
-                           offsY=-weightLeftY) {
-  bead(x=offsX+10,
-       y=offsY-16.5);                    
+module WBPWeightLeftEndBead(offsY=weightLeftY) {
+  bead(x=-weightOffsX,
+       y=offsY-16.5,
+       z=bcZ);                    
 }
-*WBPWeightLeftEndBead(0,0);
+*WBPWeightLeftEndBead();
 
 //Left chain segment
-module WBPWeightLeftChain(offsX=-weightOffsX,
-                         offsY=-weightLeftY) {
-
-  beadArc(x=offsX,
-          y=offsY-16.5,
-          d=20,a1=90,a2=270);
+module WBPWeightLeftChain(offsY=weightLeftY) {
+  beadArc(x =-weightOffsX,
+          y =offsY-16.5,
+          z =bcZ-10,
+          ry=90,                    
+          d =20,
+          a1=90,
+          a2=270);
 }
-*WBPWeightLeftChain(0,0);
+*WBPWeightLeftChain();
 
 //Right start bead
-module WBPWeightRightStartBead(offsX=canvasW+weightOffsX,
-                              offsY=-weightRightY) {
-  bead(x=offsX+10,
-       y=offsY-16.5);                    
+module WBPWeightRightStartBead(offsY=weightRightY) {
+  bead(x=canvasW+weightOffsX,
+       y=offsY-16.5,
+       z=bcZ-20);                    
 }
-*WBPWeightRightStartBead(0,0);
+*WBPWeightRightStartBead();
 
 //Left end bead
-module WBPWeightRightEndBead(offsX=canvasW+weightOffsX,
-                            offsY=-weightRightY) {
-  bead(x=offsX-10,
-       y=offsY-16.5);                    
+module WBPWeightRightEndBead(offsY=weightRightY) {
+  bead(x=canvasW+weightOffsX,
+       y=offsY-16.5,
+       z=bcZ);                    
 }
 *WBPWeightRightEndBead(0,0);
 
 //Left chain segment
-module WBPWeightRightChain(offsX=canvasW+weightOffsX,
-                          offsY=-weightRightY) {
+module WBPWeightRightChain(offsY=weightRightY) {
 
-  beadArc(x=offsX,
-          y=offsY-16.5,
-          d=20,a1=90,a2=270);
+  beadArc(x =canvasW+weightOffsX,
+          y =offsY-16.5,
+          z =bcZ-10,
+          ry=90,                    
+          d =20,
+          a1=90,
+          a2=270);
 }
-*WBPWeightRightChain(0,0);
+*WBPWeightRightChain();
 
 //Thread profile
 threadPitch   = 4;
@@ -260,5 +259,15 @@ module WBPWeight_assembly() {
 
 if($preview) {
    $explode = 0;
-   WBPWeight_assembly();
+
+   transrot([0,weightLeftY,bcZ-10],[0,90,0])  
+     WBPWeight_assembly();
+
+   transrot([canvasW,weightRightY,bcZ-10],[0,90,0])  
+     WBPWeight_assembly();
+
+   *whiteboard(canvasHeight=canvasH,
+              canvasWidth=canvasW,
+              drawingXF=drawingXF,
+              drawingYF=drawingYF);   
  }

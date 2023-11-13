@@ -40,28 +40,31 @@ include <../lib/NopSCADlib/vitamins/stepper_motors.scad>
 include <../lib/NopSCADlib/vitamins/microswitches.scad>
 include <../lib/NopSCADlib/utils/thread.scad>
 
-use <../vitamins/sg90.scad>
-use <../vitamins/pen.scad>
-use <../vitamins/magnet.scad>
+use <./vitamins/sg90.scad>
+use <./vitamins/pen.scad>
+use <./vitamins/magnet.scad>
 
-use <../printed/cylinderBearing.scad>
-use <../printed/beadedChainIdler.scad>
-use <../printed/beadedChainPulley.scad>
-use <../printed/beadedChainMount.scad>
-use <../printed/penClamp.scad>
-use <../printed/sg90Spline.scad>
+use <./printed/cylinderBearing.scad>
+use <./printed/beadedChainIdler.scad>
+use <./printed/beadedChainPulley.scad>
+use <./printed/beadedChainMount.scad>
+use <./printed/penClamp.scad>
+use <./printed/sg90Spline.scad>
 
-use <../models/whiteboard.scad>
+use <./models/whiteboard.scad>
 
-//use <../scad/WBPPulley.scad>
-//use <../scad/WBPAligner.scad>
-//use <../scad/WBPClampScrew.scad>
-//use <../scad/WBPStepperMount.scad>
-//use <../scad/WBPStepperShaft.scad>
-//use <../scad/WBPStepperClamp.scad>
-//use <../scad/WBPEndstop.scad>
-//use <../scad/WBPGondolaPen.scad>
-//use <../scad/WBPGondolaLifter.scad>
+use <./WBPPulley.scad>
+use <./WBPAligner.scad>
+use <./WBPStepper.scad>
+use <./WBPStepperMount.scad>
+use <./WBPGondola.scad>
+use <./WBPGondolaBearings.scad>
+use <./WBPGondolaLifter.scad>
+use <./WBPWeight.scad>
+use <./WBPController.scad>
+use <./WBPBeadedChain.scad>
+
+
 
 //Global variables
 //================
@@ -69,8 +72,7 @@ use <../models/whiteboard.scad>
 //Canvas size
 canvasW  = 1000; //Window width
 canvasH  =  800; //Window height
-canvasZ  =  -12; //Y offset of the canvas
-
+//canvasZ  =  -12; //Y offset of the canvas
 
 //Drawing
 drawingXF = function (t)  canvasW/2+0.4*canvasW*cos(360*t);
@@ -84,28 +86,31 @@ gondolaY = drawingYF($t); //Y coordinate of the gondola
 //gondolaX =  0.7*canvasW; //X coordiate of the gondola
 //gondolaY = -0.7*canvasH; //Y coordinate of the gondola
 
+//Steppers
+stepperT      = NEMA17_40; //type of stepper motor
+stepperOffsZ  = 1;         //Y offset between stepper and whiteboard 
+stepperLeftA  = atan(gondolaY/gondolaX);
+stepperRightA = 90+atan(gondolaY/(canvasW-gondolaX));
+//echo("stepperLeftA  = ", stepperLeftA); 
+//echo("stepperRightA = ", stepperRightA); 
+pulleyLeftA  = sqrt(pow(gondolaX,2)+pow(gondolaY,2))*360/(64*4);
+pulleyRightA = sqrt(pow(canvasW-gondolaX,2)+pow(gondolaY,2))*360/(64*4);
+idlerLeftA  = sqrt(pow(gondolaX,2)+pow(gondolaY,2))*180/(20*PI);
+idlerRightA = sqrt(pow(canvasW-gondolaX,2)+pow(gondolaY,2))*180/(20*PI);
+
 //Beaded chain
 bcBeadD = 3.2;     //Bead diameter (+tolerance)
 bcBeadS = 4;       //Bead spacing (distance between center of beads)
 bcCordD = 1;       //Cord diameter
 bcBeadC = "Gray";  //Bead color
-
-//Steppers
-stepperT      = NEMA17_40; //type of stepper motor
-stepperOffsX  = 50;        //X offset between the window corner and the stepper center
-stepperOffsY  = 50;        //Y offset between the window corner and the stepper center
-stepperS      = canvasW +2*stepperOffsX; //Distance between the stepper centers
-stepperLeftA  = atan((gondolaY+stepperOffsY)/(gondolaX+stepperOffsX));
-stepperRightA = 90+atan((gondolaY+stepperOffsY)/(canvasW-gondolaX+stepperOffsX));
-//echo("stepperLeftA  = ", stepperLeftA); 
-//echo("stepperRightA = ", stepperRightA); 
+bcZ     = stepperOffsZ+NEMA_length(stepperT)+NEMA_boss_height(stepperT)+8;
 
 //Weights
-weightOffsX    = stepperOffsX+10+64/PI;
-weightOffsY    = 61; //Endstop Y offset (relative to the window corner)
-weightMaxLiftS = sqrt(pow(canvasW+stepperOffsX,2)+pow(canvasH+stepperOffsY,2));
-weightLeftY    = weightOffsY+(weightMaxLiftS-sqrt(pow(gondolaX+stepperOffsX,2)+pow(gondolaY-stepperOffsY,2)))/2;
-weightRightY   = weightOffsY+(weightMaxLiftS-sqrt(pow(canvasW-gondolaX+stepperOffsX,2)+pow(gondolaY-stepperOffsY,2)))/2;
+weightOffsX    = 64/PI;
+weightOffsY    = -canvasH; //Endstop Y offset (relative to the window corner)
+weightMaxLiftS = sqrt(pow(canvasW,2)+pow(canvasH,2));
+weightRightY   = weightOffsY+(weightMaxLiftS-sqrt(pow(gondolaX,2)+pow(gondolaY,2)))/2;
+weightLeftY    = weightOffsY+(weightMaxLiftS-sqrt(pow(canvasW-gondolaX,2)+pow(gondolaY,2)))/2;
 //echo("weightLeftY  = ", weightLeftY); 
 //echo("weightRightY = ", weightRightY); 
 

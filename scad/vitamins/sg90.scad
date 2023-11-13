@@ -15,7 +15,7 @@
 //#                                                                             #
 //###############################################################################
 
-include <../lib/NopSCADlib/lib.scad>
+include <../../lib/NopSCADlib/lib.scad>
 
 module sg90() {
   vitamin("sg90(): SG90 servo motor");

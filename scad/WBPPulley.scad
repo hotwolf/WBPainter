@@ -33,7 +33,7 @@
 
 include <WBPConfig.scad>
 
-use <../printed/beadedChainPulley.scad>
+//use <../printed/beadedChainPulley.scad>
 
 //Set view
 $vpt = [8,10,20];
@@ -83,5 +83,16 @@ module WBPPulley_assembly() {
 
 if($preview) {   
    $explode = 1;
-   WBPPulley_assembly();
+   
+   transrot([0,0,bcZ],[0,0,0])
+     WBPPulley_assembly();
+   
+   transrot([canvasW,0,bcZ],[0,0,0])
+      WBPPulley_assembly();
+   
+   whiteboard(canvasHeight=canvasH,
+              canvasWidth=canvasW,
+              drawingXF=drawingXF,
+              drawingYF=drawingYF); 
+  
 }

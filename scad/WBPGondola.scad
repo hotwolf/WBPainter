@@ -33,9 +33,6 @@
 
 include <./WBPConfig.scad>
 
-use <../scad/WBPGondolaBearings.scad>
-use <../scad/WBPGondolaLifter.scad>
-
 //Set view
 //$vpt = [1,0,5];
 //$vpr = [0,250,320];
@@ -50,7 +47,7 @@ module WBPGondola_assembly() {
 
    translate([0,-42,0]) WBPGondolaLifter_assembly();
       
-   translate([0,0,-44]) pen(r=undef,d=18);
+   translate([0,0,-bcZ]) pen(r=undef,d=18);
 
        
   }  

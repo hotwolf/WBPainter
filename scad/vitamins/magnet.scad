@@ -1,5 +1,5 @@
 //###############################################################################
-//# WBPainter - Pen                                                             #
+//# WBPainter - Magnet                                                          #
 //###############################################################################
 //#    Copyright 2023 Dirk Heisswolf                                            #
 //#    This file is part of the WBPainter project.                              #
@@ -22,44 +22,28 @@
 //#                                                                             #
 //###############################################################################
 //# Description:                                                                #
-//#   Model of a pen                                                            #
+//#   A model of magnet           .                                             #
 //#                                                                             #
 //###############################################################################
 //# Version History:                                                            #
-//#   November 6, 2023                                                          #
+//#   February 17, 2020                                                         #
 //#      - Initial release                                                      #
 //#                                                                             #
 //###############################################################################
 
-include <../lib/NopSCADlib/lib.scad>
+include <../../lib/NopSCADlib/lib.scad>
 
-module pen(r=undef,d=12) {
-  vitamin("pen(): Window pen");
-  r = r==undef ? d/2 : r;
+module magnet() {
+    description = str("Neodym Magnet (D=19.5,H=4.6)");
+    vitamin(str("magnet(): ", description));
     
-  //Tip
-  color("SeaGreen") rotate_extrude()
-  intersection() {
-    square([1.5,4]);
-    hull() {
-      translate([0,0.5,0]) circle(d=1.5);
-      translate([0,4,0])   circle(d=3);
-    }
-  }
-  //Tip holder
-  color("MediumSeaGreen") rotate_extrude()
-  union() {
-    translate([0,4,0]) square([2.5,6]);
-    hull() {
-      translate([0,10,0]) square([2.5,6]);
-      translate([0,19,0]) square([r-2,9]);
-    }
-  }
-  //Body
-  color("WhiteSmoke") rotate_extrude()
-  translate([0,28,0]) square([r,100]);
+    color("Silver"){ cylinder(h=4.6,d=19.5); }    
 }
 
-if ($preview) {
-  pen();
+module magnetCavity() {
+    cylinder(h=4.8,d=19.7);    
 }
+
+
+//Demo coin
+magnet();

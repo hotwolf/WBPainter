@@ -33,12 +33,17 @@
 
 include <./WBPConfig.scad>
 
-use <../printed/cylinderBearing.scad>
-use <../printed/beadedChainIdler.scad>
-
 //Set view
-$vpt = [42,8,11];
-$vpr = [60,0,340];
+//$vpt = [42,8,11];
+//$vpr = [60,0,340];
+
+
+
+
+
+
+
+
 
 //Idler for beaded chain
 module WBPAlignerIdler_stl() {
@@ -99,10 +104,6 @@ module WBPAligner() {
     }      
     union() {
       translate([0,0,-14])  cylinder(h=12,d=19);
-      *translate([15.5,15.5,-14])  cylinder(h=12,d=7);
-      *translate([15.5,-15.5,-14]) cylinder(h=12,d=7);        
-      translate([40,0,-8]) cube([40,0.4,0.8],center=true);
-      translate([40,0,-8]) cube([0.4,20,0.8],center=true);
     }
   }
        
@@ -140,55 +141,52 @@ module WBPAligner() {
 }
 *WBPAligner();
 
-module WBPAlignerRight_stl() {
-  stl("WBPAlignerRight");
-  color(pp2_colour)
-  difference() { 
-    %WBPAligner();
-    union() {
-      transrot([39,1,-7.8],[180,0,270])  linear_extrude(0.8)text("+4cm",size=6,halign="right",valign="bottom");
-      transrot([52,-4,-7.8],[180,0,270]) linear_extrude(0.8)text("R",size=12,halign="left",valign="top");
-    }   
-  }
-}
-
 module WBPAlignerLeft_stl() {
   stl("WBPAlignerLeft");
-  color(pp2_colour)
-  difference() {
-    %mirror([0,1,0]) WBPAligner();
-    union() {
-      transrot([39,-1,-7.8],[180,0,270]) linear_extrude(0.8)text("+4cm",size=6,halign="left",valign="bottom");
-      transrot([52,4,-7.8],[180,0,270])  linear_extrude(0.8)text("L",size=12,halign="right",valign="top");
-    }
+  color(pp2_colour) {
+    WBPAligner();
+    transrot([32,-14,-4.6],[0,0,90]) linear_extrude(1)text("L",size=12,halign="left",valign="top");
   }
 }
 
-//! TBD
-module WBPAlignerRight_assembly() {
-    pose([42,8,11], [60,0,340])
-    assembly("WBPAlignerRight") {
-
-      WBPAlignerRight_stl();
-      translate([37,10,0])  explode([0,0,20]) WBPAlignerIdler_stl();
-      translate([57,-10,0]) explode([0,0,20]) WBPAlignerIdler_stl();
-    }
+module WBPAlignerRight_stl() {
+  stl("WBPAlignerRight");
+  color(pp2_colour) {
+    mirror([0,1,0]) WBPAligner();
+    transrot([32,14,-4.6],[0,0,90]) linear_extrude(1)text("R",size=12,halign="right",valign="top");
+  }
 }
 
 //! TBD
 module WBPAlignerLeft_assembly() {
-    pose([42, 8, 11], [70,0,218])
+    pose([42,8,11], [60,0,340])
     assembly("WBPAlignerLeft") {
 
       WBPAlignerLeft_stl();
-      translate([37,-10,0]) explode([0,0,20]) WBPAlignerIdler_stl();
-      translate([57,10,0])  explode([0,0,20]) WBPAlignerIdler_stl();
+      transrot([37,10,0],[0,0,-idlerLeftA])  explode([0,0,20]) WBPAlignerIdler_stl();
+      transrot([57,-10,0],[0,0,idlerLeftA]) explode([0,0,20]) WBPAlignerIdler_stl();
+    }
+}
+
+//! TBD
+module WBPAlignerRight_assembly() {
+    pose([42, 8, 11], [70,0,218])
+    assembly("WBPAlignerRight") {
+
+      WBPAlignerRight_stl();
+      transrot([37,-10,0],[0,0,-idlerRightA]) explode([0,0,20]) WBPAlignerIdler_stl();
+      transrot([57,10,0],[0,0,idlerRightA])  explode([0,0,20]) WBPAlignerIdler_stl();
     }
 }
 
 if($preview) {
    $explode = 0;
    *WBPPulley_assembly();   
-   *WBPAlignerRight_assembly();
-   WBPAlignerLeft_assembly();
+   transrot([canvasW,0,bcZ],[0,0,270-stepperRightA]) WBPAlignerRight_assembly();
+   transrot([0,0,bcZ],[0,0,0+stepperLeftA])          WBPAlignerLeft_assembly();
+    
+   whiteboard(canvasHeight=canvasH,
+              canvasWidth=canvasW,
+              drawingXF=drawingXF,
+              drawingYF=drawingYF);     
 }

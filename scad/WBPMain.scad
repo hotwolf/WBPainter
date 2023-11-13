@@ -55,12 +55,6 @@
 
 include <./WBPConfig.scad>
 
-use <./WBPStepper.scad>
-use <./WBPGondola.scad>
-use <./WBPWeight.scad>
-use <./WBPController.scad>
-use <./WBPBeadedChain.scad>
-
 //Set view
 //$vpt = [500,-400,-1.5];
 //$vpr = [10,30,0];
@@ -78,19 +72,25 @@ module main_assembly() {
       WBPStepperLeft_assembly();
 
       //Right stepper
-      WBPStepperRight_assembly();
+      translate([canvasW,0,0])
+        WBPStepperRight_assembly();
 
       //Gondola
-      translate([gondolaX,gondolaY,0]) WBPGondola_assembly();
+      translate([gondolaX,gondolaY,bcZ]) WBPGondola_assembly();
 
       //Left weight
-      translate([-weightOffsX,-weightLeftY,0]) WBPWeight_assembly();
+      transrot([-weightOffsX,weightLeftY,bcZ-10],[0,90,0])
+        WBPWeight_assembly();
         
       //Right weight
-      translate([canvasW+weightOffsX,-weightRightY,0]) WBPWeight_assembly();
+      transrot([canvasW+weightOffsX,weightRightY,bcZ-10],[0,90,0]) 
+        WBPWeight_assembly();
 
       //Controller
-      translate([canvasW/2,0,0]) WBPController_assembly();
+      translate([(canvasW/2)-100,0,0])
+        WBPController_GT2560_assembly();
+      translate([(canvasW/2)+100,0,0])
+        WBPController_MEGA2560_assembly();
 
       //Beaded chains
       WBPBeadedChainLeft();
@@ -99,7 +99,7 @@ module main_assembly() {
       //Whiteboard
       whiteboard(xOffset=0,
                  yOffset=0,
-                 zOffset=-12,
+                 zOffset=0,
                  canvasHeight=canvasH,
                  canvasWidth=canvasW,
                  drawingXF=drawingXF,

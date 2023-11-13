@@ -33,10 +33,6 @@
 
 include <./WBPConfig.scad>
 
-use <./WBPBeadedChain.scad>
-
-use <../printed/beadedChainMount.scad>
-
 //Set view
 //$vpt = [1,0,5];
 //$vpr = [0,250,320];
@@ -45,23 +41,25 @@ use <../printed/beadedChainMount.scad>
 //==================
 //Left end bead
 module WBPGondolaBearingLeftStartBead(offsX=gondolaX,
-                                     offsY=gondolaY,
-                                     offsA=90+stepperLeftA) {
-  transrot([offsX,offsY,0],[0,0,offsA])
+                                      offsY=gondolaY,
+                                      offsZ=bcZ,
+                                      offsA=90+stepperLeftA) {
+  transrot([offsX,offsY,offsZ],[0,0,offsA])
   bead(x=0,
        y=50-3*bcBeadS);                    
 }
-*WBPGondolaBearingLeftStartBead(0,0);
+*WBPGondolaBearingLeftStartBead(0,0,0);
 
 //Left end bead
 module WBPGondolaBearingRightStartBead(offsX=gondolaX,
-                                      offsY=gondolaY,
-                                      offsA=-stepperRightA) {
-  transrot([offsX,offsY,0],[0,0,offsA])
+                                       offsY=gondolaY,
+                                       offsZ=bcZ,
+                                       offsA=-stepperRightA) {
+  transrot([offsX,offsY,bcZ],[0,0,offsA])
   bead(x=0,
        y=50-3*bcBeadS);                    
 }
-*WBPGondolaBearingRightStartBead(0,0);
+*WBPGondolaBearingRightStartBead(0,0,0);
 
 //Pen clamp settings
 penClampL1 = 10; //Depth of the clamp

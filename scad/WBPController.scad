@@ -116,7 +116,7 @@ RRDSC    = ["RRDSC", "RapRapDiscount Smart Controller",
            ];
 
 //Magnet positions
-module WBPController_magnetPositions(z=0) {
+module WBPController_magnetPositions_GT2560(z=0) {
   for(i = [[-58, 69-45, z],
            [ 58, 69-45, z],
            [-60,-46, z],
@@ -124,27 +124,54 @@ module WBPController_magnetPositions(z=0) {
     translate(i) children();
 }
 
+module WBPController_magnetPositions_MEGA2560(z=0) {
+  for(i = [[-52, 69-45, z],
+           [ 52, 69-45, z],
+           [-60,-46, z],
+           [ 60,-46, z]])
+    translate(i) children();
+}
+
 //Controller mount
-module WBPControllerMount_stl() {
+module WBPControllerMount_GT2560_stl() {
 
    difference() {
       union() {         
-         translate([0, 40,canvasZ]) pcb_screw_positions(GT2560)   cylinder(h=10, d=7);
-         translate([0, 40,canvasZ]) pcb_screw_positions(MEGA2560) cylinder(h=10, d=7);
-         translate([0,-28,canvasZ]) pcb_screw_positions(RRDSC)    cylinder(h=10, d=7);
+         translate([0, 40,0]) pcb_screw_positions(GT2560)   cylinder(h=10, d=7);
+         translate([0,-28,0]) pcb_screw_positions(RRDSC)    cylinder(h=10, d=7);
          hull() { 
-            translate([-52, 76,canvasZ]) cylinder(h=6, d=10);
-            translate([ 52, 76,canvasZ]) cylinder(h=6, d=10);
-            WBPController_magnetPositions(canvasZ) cylinder(h=6, d=24);
-            translate([0, 40,canvasZ]) pcb_screw_positions(GT2560)   cylinder(h=6, d=10);
-            translate([0, 40,canvasZ]) pcb_screw_positions(MEGA2560) cylinder(h=6, d=10);
-            translate([0,-28,canvasZ]) pcb_screw_positions(RRDSC)    cylinder(h=6, d=10);
+            translate([-52, 76,0]) cylinder(h=6, d=10);
+            translate([ 52, 76,0]) cylinder(h=6, d=10);
+            WBPController_magnetPositions_GT2560(0) cylinder(h=6, d=24);
+            translate([0, 40,0]) pcb_screw_positions(GT2560)   cylinder(h=6, d=10);
+            translate([0,-28,0]) pcb_screw_positions(RRDSC)    cylinder(h=6, d=10);
          }
       }
       union() {
-         WBPController_magnetPositions(canvasZ+0.2) magnetCavity();
+         WBPController_magnetPositions_GT2560(0+0.2) magnetCavity();
          translate([0, 40,-12]) pcb_screw_positions(GT2560)   nut_trap(M3_dome_screw, M3_nut, 5);
-         translate([0, 40,-12]) pcb_screw_positions(MEGA2560) nut_trap(M3_dome_screw, M3_nut, 5);
+         translate([0,-28,-12]) pcb_screw_positions(RRDSC)    nut_trap(M3_dome_screw, M3_nut, 5);
+      }
+  }  
+}
+
+module WBPControllerMount_MEGA2560_stl() {
+
+   difference() {
+      union() {         
+         translate([0, 28,0]) pcb_screw_positions(MEGA2560) cylinder(h=10, d=7);
+         translate([0,-28,0]) pcb_screw_positions(RRDSC)    cylinder(h=10, d=7);
+         hull() { 
+            translate([-48, 52,0]) cylinder(h=6, d=10);
+            translate([ 48, 52,0]) cylinder(h=6, d=10);
+            WBPController_magnetPositions_MEGA2560(0) cylinder(h=6, d=24);
+            translate([0, 28,0]) pcb_screw_positions(MEGA2560) cylinder(h=6, d=10);
+            translate([0,-28,0]) pcb_screw_positions(RRDSC)    cylinder(h=6, d=10);
+         }
+      }
+      union() {
+         WBPController_magnetPositions_MEGA2560(0+0.2) magnetCavity();
+         translate([0, 28,-12]) pcb_screw_positions(MEGA2560) nut_trap(M3_dome_screw, M3_nut, 5);
          translate([0,-28,-12]) pcb_screw_positions(RRDSC)    nut_trap(M3_dome_screw, M3_nut, 5);
       }
   }  
@@ -152,55 +179,90 @@ module WBPControllerMount_stl() {
 
 
 //! Insert magnets during print
-module WBPControllerMount_assembly() {
+module WBPControllerMount_GT2560_assembly() {
 
    //Controller mount
-   WBPControllerMount_stl();
+   WBPControllerMount_GT2560_stl();
 
    //Magnets 
-   WBPController_magnetPositions(canvasZ+0.2){magnet();};
+   WBPController_magnetPositions_GT2560(0+0.2){magnet();};
+}
+
+module WBPControllerMount_MEGA2560_assembly() {
+
+   //Controller mount
+   WBPControllerMount_MEGA2560_stl();
+
+   //Magnets 
+   WBPController_magnetPositions_MEGA2560(0+0.2){magnet();};
 }
 
 //! TBD
-module WBPController_assembly() {
+module WBPController_GT2560_assembly() {
   pose([25,30,20], [80,0,240])
   assembly("WBPController") {
 
    //Controller mount
-   WBPControllerMount_assembly();
+   WBPControllerMount_GT2560_assembly();
 
    //Geeetech GT2560
    transrot([0,40,-2],[0,0,0]) {
-      explode(3) pcb(GT2560);
-      pcb_screw_positions(GT2560) {        
-         translate([0,0,pcb_thickness(GT2560)]) screw_and_washer(M3_dome_screw,10);
-         explode(-10) translate([0,0,canvasZ+4]) nut(M3_nut);         
-      } 
-    }
-
-    //Arduino MEGA 2560 * RAMPS 1.4
-    transrot([0,40,-2],[0,0,0]) {
-      explode(3) pcb(MEGA2560);
-      pcb_screw_positions(MEGA2560) {        
-         translate([0,0,pcb_thickness(MEGA2560)]) screw_and_washer(M3_dome_screw,10);
-         explode(-10) translate([0,0,canvasZ+4]) nut(M3_nut);         
-     } 
+      explode(3) translate([0,0,12]) pcb(GT2560);
+      pcb_screw_positions(GT2560)         
+        translate([0,0,pcb_thickness(GT2560)+12]) screw_and_washer(M3_dome_screw,10);
+      explode(-10) translate([0,0,4]) nut(M3_nut);         
+       
     }
  
     //RapRapDiscount Smart Controller
-//    rotate([30,0,0])
     translate([0,-28,-2]) {
-      explode(3) pcb(RRDSC);
-      pcb_screw_positions(RRDSC) {        
-         translate([0,0,pcb_thickness(RRDSC)]) screw_and_washer(M3_dome_screw,10);
-         explode(-10) translate([0,0,canvasZ+4]) nut(M3_nut);         
+      explode(3) translate([0,0,12]) pcb(RRDSC);
+      pcb_screw_positions(RRDSC) {      
+        translate([0,0,pcb_thickness(RRDSC)+12]) screw_and_washer(M3_dome_screw,10);
+        explode(-10) translate([0,0,4]) nut(M3_nut);
+      }   
+    }
+  }
+}
+ 
+//! TBD
+module WBPController_MEGA2560_assembly() {
+  pose([25,30,20], [80,0,240])
+  assembly("WBPController") {
+
+   //Controller mount
+   WBPControllerMount_MEGA2560_assembly();
+
+    //Arduino MEGA 2560 * RAMPS 1.4
+    transrot([0,28,-2],[0,0,0]) {
+      explode(3) translate([0,0,12]) pcb(MEGA2560);
+        pcb_screw_positions(MEGA2560) {        
+      translate([0,0,pcb_thickness(MEGA2560)+12]) screw_and_washer(M3_dome_screw,10);
+      explode(-10) translate([0,0,4]) nut(M3_nut);  
       } 
     }
-        
+ 
+    //RapRapDiscount Smart Controller
+    translate([0,-28,-2]) {
+      explode(3) translate([0,0,12]) pcb(RRDSC);
+      pcb_screw_positions(RRDSC) {        
+        translate([0,0,pcb_thickness(RRDSC)+12]) screw_and_washer(M3_dome_screw,10);
+        explode(-10) translate([0,0,4]) nut(M3_nut);         
+      } 
+    }       
   }
 }
   
 if($preview) {
 //  $explode = 1;
-    WBPController_assembly();
+    translate([(canvasW/2)-100,0,0])
+      WBPController_GT2560_assembly();
+    translate([(canvasW/2)+100,0,0])
+      WBPController_MEGA2560_assembly();
+    
+    whiteboard(canvasHeight=canvasH,
+              canvasWidth=canvasW,
+              drawingXF=drawingXF,
+              drawingYF=drawingYF); 
+       
 }
