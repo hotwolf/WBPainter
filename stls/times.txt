@@ -1,0 +1,19 @@
+{
+    "WBPStepperMountWithInlays.stl": 6.743,
+    "WBPPulley.stl": 120.291,
+    "WBPAlignerIdler.stl": 10.74,
+    "WBPAlignerRight.stl": 12.782,
+    "WBPAlignerLeft.stl": 14.073,
+    "WBPGondolaPenClampD18Part1.stl": 5.937,
+    "WBPGondolaPenClampD18Part2.stl": 2.601,
+    "WBPGondolaPenClampD18Part3.stl": 4.405,
+    "WBPGondolaPenClampD18Part4.stl": 5.785,
+    "WBPGondolaBearing.stl": 59.099,
+    "WBPStepperEndstopLeft.stl": 35.71,
+    "WBPStepperEndstopRight.stl": 36.49,
+    "WBPWeightIdler.stl": 12.073,
+    "WBPWeightTop.stl": 12.632,
+    "WBPWeightBottom.stl": 9.752,
+    "WBPServoGear.stl": 4.251,
+    "WBPServoLifter.stl": 1.511
+}

@@ -1,0 +1,7 @@
+WBPPulley_assemblies:
+Vitamins:
+  2 Nut M3nS 5.5 x 1.8mm 
+  2 Screw M3 pan x  8mm
+
+Printed:
+  2 WBPPulley.stl
