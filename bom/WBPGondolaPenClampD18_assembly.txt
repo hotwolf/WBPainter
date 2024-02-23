@@ -1,6 +1,0 @@
-WBPGondolaPenClampD18_assemblies:
-Printed:
-  2 WBPGondolaPenClampD18Part1.stl
-  2 WBPGondolaPenClampD18Part2.stl
-  2 WBPGondolaPenClampD18Part3.stl
-  2 WBPGondolaPenClampD18Part4.stl

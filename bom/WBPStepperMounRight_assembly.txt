@@ -1,9 +1,0 @@
-WBPStepperMounRight_assembly:
-Vitamins:
-  1 Stepper motor NEMA17 x 40mm
-  3 Screw M3 pan x  8mm
-  3 Washer star M3 x 0.5mm
-  3 Washer  M3 x 7mm x 0.5mm
-
-Assemblies:
-  1 WBPStepperMountWithInlays_assembly

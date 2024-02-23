@@ -1,6 +1,0 @@
-WBPGondolaPenBearings_assembly:
-Printed:
-  2 WBPGondolaBearing.stl
-
-Assemblies:
-  2 WBPGondolaPenClampD18_assemblies

@@ -1,5 +1,0 @@
-WBPController_assembly:
-Vitamins:
-  1 RapRapDiscount Smart Controller
-  4 Screw M3 dome x 20mm
-  4 Washer  M3 x 7mm x 0.5mm

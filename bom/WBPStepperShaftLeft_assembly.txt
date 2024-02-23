@@ -1,6 +1,0 @@
-WBPStepperShaftLeft_assembly:
-
-Assemblies:
-  1 WBPAlignerLeft_assembly
-  1 WBPPulley_assembly
-  1 WBPStepperMountLeft_assembly

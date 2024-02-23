@@ -1,7 +1,0 @@
-WBPGondola_assembly:
-Vitamins:
-  1 Window pen
-
-Assemblies:
-  1 WBPGondolaLifter_assembly
-  1 WBPGondolaPenBearings_assembly

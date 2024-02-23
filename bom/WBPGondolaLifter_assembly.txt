@@ -1,8 +1,0 @@
-WBPGondolaLifter_assembly:
-Vitamins:
-  1 SG90 servo motor
-
-Printed:
-  1 WBPServoGear.stl
-  1 WBPServoLifter.stl
-  1 WBPWeightBottom.stl
